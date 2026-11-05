@@ -353,3 +353,36 @@ body{background:var(--cream)}
 @media(prefers-reduced-motion:reduce){
   .card,.way img,.journal-card img,.place,.service-row,.btn{transition:none}
 }
+
+/* Final transition polish from photographic hero into the airy page. */
+.topbar .container{min-height:39px;font-size:.73rem;letter-spacing:.065em}
+.topbar a{color:#f0f9f5;font-weight:800}
+.hero::after{
+  content:"";
+  position:absolute;
+  inset:auto 0 0;
+  z-index:1;
+  height:104px;
+  pointer-events:none;
+  background:linear-gradient(180deg,
+    rgba(230,240,234,0) 0%,
+    rgba(230,240,234,.3) 36%,
+    rgba(230,240,234,.85) 82%,
+    #e6f0ea 100%);
+}
+.hero-note{bottom:15%}
+.hero-label{bottom:108px}
+.statsbar{
+  background:linear-gradient(180deg,#e6f0ea 0%,#f2f5ef 64%,var(--cream) 100%);
+}
+.stat{font-size:.83rem;font-weight:800;color:#264a46}
+.stat span{font-size:1.3rem;color:#377f78}
+@media(max-width:900px){
+  .hero-note{bottom:17%}
+}
+@media(max-width:640px){
+  .topbar .container{min-height:37px;font-size:.63rem}
+  .hero::after{height:92px}
+  .hero-label{bottom:97px}
+  .stat{font-size:.8rem}
+}
