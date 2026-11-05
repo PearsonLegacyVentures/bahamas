@@ -1,0 +1,10 @@
+{
+  "name": "tranquilitas-bahamas",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Differentiated Nassau spa and mobile massage site for Tranquilitas",
+  "scripts": {
+    "build": "node scripts/generate.mjs",
+    "test": "node --test tests/site.test.mjs"
+  }
+}
