@@ -17,6 +17,30 @@ await run('Homepage renders and desktop layout fits',async()=>{
  assert.ok(width.scroll<=width.inner+8,'Desktop horizontal overflow');
  await desktop.screenshot({path:'artifacts/home-desktop.png',fullPage:true});
 });
+await run('Blended hero and borderless sections match visual brief',async()=>{
+  await desktop.goto(origin+'/',{waitUntil:'domcontentloaded'});
+  const visual=await desktop.evaluate(()=>{
+    const rect=q=>document.querySelector(q)?.getBoundingClientRect();
+    const style=q=>getComputedStyle(document.querySelector(q));
+    const hero=rect('.hero'),photo=rect('.hero-picture');
+    return {
+      heroWidth:hero?.width,
+      photoWidth:photo?.width,
+      photoPosition:style('.hero-picture').position,
+      heroFade:getComputedStyle(document.querySelector('.hero'),'::after').backgroundImage,
+      statsBorder:style('.statsbar').borderTopWidth,
+      cardBorder:style('.card').borderTopWidth,
+      mutedBackground:style('.section.muted').backgroundImage
+    };
+  });
+  assert.ok(Math.abs(visual.heroWidth-visual.photoWidth)<=2,'Hero photo must fill full viewport, not split into columns');
+  assert.equal(visual.photoPosition,'absolute','Hero photo must overlay behind copy');
+  assert.match(visual.heroFade,/linear-gradient/,'Photo-to-section fade is missing');
+  assert.equal(visual.statsBorder,'0px','Trust strip should not have a hard border');
+  assert.equal(visual.cardBorder,'0px','Service card hard borders should be removed');
+  assert.match(visual.mutedBackground,/linear-gradient/,'Adjacent pale sections should blend smoothly');
+  console.log('VISUAL_SYSTEM '+JSON.stringify(visual));
+});
 await run('Hero image and logo have loaded',async()=>{
  await desktop.locator('.hero-picture img').evaluate(img=>img.scrollIntoView());
  await desktop.waitForTimeout(2000);
