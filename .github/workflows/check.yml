@@ -24,3 +24,20 @@ jobs:
         run: git diff --exit-code -- '*.html' '*/index.html' 'journal/**' 'sitemap.xml' 'llms.txt'
       - name: Test SEO, links, booking and business identity
         run: npm test
+      - name: Install browser for real layout and interaction QA
+        run: |
+          npm install --no-save --package-lock=false playwright
+          npx playwright install --with-deps chromium
+      - name: Serve static output
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/tranquilitas-bahamas-http.log 2>&1 &
+          sleep 2
+      - name: Browser QA (desktop, mobile, images, booking, gallery)
+        run: node scripts/browser-smoke.mjs
+      - name: Upload QA screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: tranquility-bahamas-visual-qa
+          path: artifacts/
+          if-no-files-found: ignore
