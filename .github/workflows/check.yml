@@ -1,0 +1,26 @@
+name: Check Tranquilitas Bahamas website
+on:
+  push:
+    branches: [main, 'feat/**']
+  pull_request:
+    branches: [main]
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check syntax
+        run: |
+          node --check assets/site.js
+          node --check scripts/generate.mjs
+      - name: Rebuild all static routes
+        run: npm run build
+      - name: Verify committed HTML is current
+        run: git diff --exit-code -- '*.html' '*/index.html' 'journal/**' 'sitemap.xml' 'llms.txt'
+      - name: Test SEO, links, booking and business identity
+        run: npm test
