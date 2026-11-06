@@ -386,3 +386,13 @@ body{background:var(--cream)}
   .hero-label{bottom:97px}
   .stat{font-size:.8rem}
 }
+
+
+/* Bahamas booking request summary */
+.bahamasBookingSummary{background:#e8f2ec;border:1px solid #c2dccc;border-radius:18px;padding:22px;color:#214b3f;margin:23px 0}
+.bahamasBookingSummary>span{display:block;font-weight:800;font-size:11px;letter-spacing:.1em;color:#627f70;margin-bottom:9px}
+.bahamasBookingSummary>strong{font-size:clamp(19px,3vw,25px);display:block}
+.bahamasBookingSummary p{color:#426457;margin:10px 0}
+.bahamasBookingSummary .request-price-status{font-size:17px;font-weight:750;color:#164b3d}
+.bahamasBookingSummary small{font-size:12px;display:block;line-height:1.6;color:#547269}
+.bahamasBookingSummary a{display:inline-block;margin-top:12px;font-weight:750;text-decoration:underline;color:#226a54}
