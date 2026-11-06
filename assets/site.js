@@ -44,6 +44,33 @@
      return [p.year,p.month,p.day].join('-');
    };
    if(date){date.min=localToday();}
+
+   // Nassau request form uses live booking prices managed by Tranquilitas; do not invent static rates.
+   const serviceField=form.querySelector('[name="service"]');
+   const formatField=form.querySelector('[name="format"]');
+   const guestField=form.querySelector('[name="guests"]');
+   const durationWrap=document.createElement('div');
+   durationWrap.className='field';
+   durationWrap.innerHTML='<label for="preferredDuration">Preferred duration *</label><select id="preferredDuration" name="duration" required><option value="">Choose a duration</option><option value="50">50 minutes</option><option value="60">60 minutes</option><option value="80">80 minutes</option><option value="90">90 minutes</option><option value="other">Other / not sure</option></select>';
+   serviceField?.closest('.field')?.after(durationWrap);
+   const summary=document.createElement('div');
+   summary.className='bahamasBookingSummary';
+   summary.setAttribute('role','status');
+   summary.setAttribute('aria-live','polite');
+   summary.innerHTML='<span>YOUR REQUEST SUMMARY</span><strong data-summary-service>Choose a massage</strong><p data-summary-details>Choose treatment, duration, setting and guest count.</p><p class="request-price-status" data-summary-price>Price: confirmed on our live booking menu</p><small>We do not duplicate potentially outdated Nassau prices. Your final quote and appointment are confirmed before payment.</small><a href="https://tranquilitasspa.setmore.com" target="_blank" rel="noopener noreferrer">See current Tranquilitas service prices</a>';
+   form.querySelector('button[type="submit"]')?.before(summary);
+   function syncRequestSummary(){
+     const name=serviceField?.value||'Choose a massage';
+     const duration=form.querySelector('[name="duration"]')?.value;
+     const place=formatField?.value,guests=guestField?.value;
+     summary.querySelector('[data-summary-service]').textContent=name;
+     summary.querySelector('[data-summary-details]').textContent=[duration&&duration!=='other'?duration+' minutes':(duration==='other'?'Duration by arrangement':null),place,guests?guests+' guest(s)':null].filter(Boolean).join(' · ')||'Choose treatment, duration, setting and guest count.';
+     summary.querySelector('[data-summary-price]').textContent='Price: see live booking menu / confirm with concierge';
+   }
+   form.addEventListener('change',syncRequestSummary);
+   form.addEventListener('input',syncRequestSummary);
+   syncRequestSummary();
+
    const serialize=()=>{
      const data=new FormData(form);
      const val=(key)=>String(data.get(key)||'').trim();
@@ -52,8 +79,10 @@
        'Hello Tranquilitas, I would like to REQUEST a Bahamas massage appointment.',
        '',
        'Treatment: '+service,
+       'Duration: '+val('duration')+' minutes',
        'Setting: '+format,
        'Guests: '+guests,
+       'Listed total: see current Tranquilitas booking menu / quote required',
        'Preferred date: '+when,
        'Preferred time: '+time+' (Nassau time)',
        'Location / property: '+area,
