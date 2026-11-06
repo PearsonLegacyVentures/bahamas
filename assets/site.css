@@ -365,10 +365,10 @@ body{background:var(--cream)}
   height:104px;
   pointer-events:none;
   background:linear-gradient(180deg,
-    rgba(230,240,234,0) 0%,
-    rgba(230,240,234,.3) 36%,
-    rgba(230,240,234,.85) 82%,
-    #e6f0ea 100%);
+    rgba(250,248,242,0) 0%,
+    rgba(250,248,242,.3) 36%,
+    rgba(250,248,242,.85) 82%,
+    var(--cream) 100%);
 }
 .hero-note{bottom:15%}
 .hero-label{bottom:108px}
