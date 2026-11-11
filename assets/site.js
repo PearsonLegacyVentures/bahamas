@@ -53,13 +53,13 @@
    durationWrap.className='field';
    durationWrap.innerHTML='<label for="preferredDuration">Preferred duration *</label><select id="preferredDuration" name="duration" required><option value="">Choose a duration</option><option value="50">50 minutes</option><option value="60">60 minutes</option><option value="80">80 minutes</option><option value="90">90 minutes</option><option value="other">Other / not sure</option></select>';
    serviceField?.closest('.field')?.after(durationWrap);
-   const customServices=['Beach Pilates','Villa Wellness Package','Special / Bespoke Wellness Request'];
+   const customServices=['Beach Pilates','Villa Wellness Package','Special / Bespoke Wellness Request','Yacht / Charter Group Wellness'];
    const requested=new URLSearchParams(window.location.search).get('service');
    if(customServices.includes(requested)&&serviceField){
      serviceField.value=requested;
      const preferredDuration=form.querySelector('[name="duration"]');
      if(preferredDuration)preferredDuration.value='other';
-     if(formatField)formatField.value=requested==='Beach Pilates'?'Private beach or waterfront':'Private villa or residence';
+     if(formatField)formatField.value=requested==='Beach Pilates'?'Private beach or waterfront':requested==='Yacht / Charter Group Wellness'?'Yacht or marina':'Private villa or residence';
    }
    const summary=document.createElement('div');
    summary.className='bahamasBookingSummary';

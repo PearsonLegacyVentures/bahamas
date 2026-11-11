@@ -11,8 +11,8 @@ const walk=(dir)=>readdirSync(dir,{withFileTypes:true}).flatMap(x=>{
  return x.isFile()&&x.name==='index.html'?[p]:[];
 });
 const htmls=walk('.').map(x=>({path:x.replace(/^\.\//,''),html:read(x)}));
-test('all 22 routes build and preserve distinct canonicals',()=>{
- assert.equal(htmls.length,22);
+test('all 23 routes build and preserve distinct canonicals',()=>{
+ assert.equal(htmls.length,23);
  const canonical=new Set();
  for(const {path,html} of htmls){
   assert.equal((html.match(/<link rel="canonical"/g)||[]).length,1,path);
@@ -32,7 +32,7 @@ test('all 22 routes build and preserve distinct canonicals',()=>{
 test('sitemap is complete but does not promote the booking request',()=>{
  const s=read('sitemap.xml');
  assert.match(s,/<urlset/);
- assert.equal((s.match(/<loc>/g)||[]).length,21);
+ assert.equal((s.match(/<loc>/g)||[]).length,22);
  assert.ok(!s.includes('<loc>'+base+'/book/</loc>'));
  assert.match(read('book/index.html'),/<meta name="robots" content="noindex,follow"/);
 });
@@ -84,3 +84,5 @@ test('additional wellness services have working enquiry options',()=>{
  }
  assert.match(read('assets/site.js'),/URLSearchParams/);
 });
+
+test('yacht charter wellness is available as a custom group enquiry',()=>{const page=read('yacht-massage-bahamas/index.html');assert.match(page,/tqYachtRequest/);assert.match(page,/captain/i);assert.match(page,/crew/i);assert.match(read('book/index.html'),/Yacht \/ Charter Group Wellness/);assert.match(read('index.html'),/yacht-massage-bahamas/)});
