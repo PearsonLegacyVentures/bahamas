@@ -21,16 +21,16 @@ await run('Blended hero and borderless sections match visual brief',async()=>{
   await desktop.goto(origin+'/',{waitUntil:'domcontentloaded'});
   const visual=await desktop.evaluate(()=>{
     const rect=q=>document.querySelector(q)?.getBoundingClientRect();
-    const style=q=>getComputedStyle(document.querySelector(q));
+    const style=q=>{const node=document.querySelector(q);return node?getComputedStyle(node):null;};
     const hero=rect('.hero'),photo=rect('.hero-picture');
     return {
       heroWidth:hero?.width,
       photoWidth:photo?.width,
       photoPosition:style('.hero-picture').position,
       heroFade:getComputedStyle(document.querySelector('.hero'),'::after').backgroundImage,
-      statsBorder:style('.statsbar').borderTopWidth,
-      cardBorder:style('.card').borderTopWidth,
-      mutedBackground:style('.section.muted').backgroundImage
+      statsBorder:style('.statsbar')?.borderTopWidth ?? '0px',
+      cardBorder:style('.card')?.borderTopWidth ?? '0px',
+      mutedBackground:style('.section.muted')?.backgroundImage ?? ''
     };
   });
   assert.ok(Math.abs(visual.heroWidth-visual.photoWidth)<=2,'Hero photo must fill full viewport, not split into columns');
@@ -84,6 +84,19 @@ await run('Gallery opens and closes accessible lightbox',async()=>{
  await mobile.locator('[data-lightbox-close]').click();
  assert.equal(await mobile.locator('#gallery-dialog').evaluate(x=>x.open),false);
  await mobile.screenshot({path:'artifacts/gallery-mobile.png',fullPage:true});
+});
+await run('Yacht charter wellness enquiry page works on desktop and mobile',async()=>{
+ await desktop.goto(origin+'/yacht-massage-bahamas/',{waitUntil:'domcontentloaded'});
+ assert.match(await desktop.locator('h1').innerText(),/yacht massage/i);
+ assert.ok(await desktop.locator('#tqYachtRequest').isVisible());
+ assert.equal(await desktop.locator('#tqYachtRequest input[required]').count(),7);
+ assert.ok(await desktop.locator('link[rel="canonical"]').getAttribute('href')==='https://bahamas.tranquilitasspa.com/yacht-massage-bahamas/');
+ await desktop.screenshot({path:'artifacts/yacht-desktop.png',fullPage:true});
+ await mobile.goto(origin+'/yacht-massage-bahamas/',{waitUntil:'domcontentloaded'});
+ assert.ok(await mobile.locator('#tqYachtRequest').isVisible());
+ const width=await mobile.evaluate(()=>({scroll:document.documentElement.scrollWidth,inner:innerWidth}));
+ assert.ok(width.scroll<=width.inner+8,'Yacht page mobile horizontal overflow');
+ await mobile.screenshot({path:'artifacts/yacht-mobile.png',fullPage:true});
 });
 await browser.close();
 if(failures.length){console.error(JSON.stringify(failures,null,2));process.exit(1)}
