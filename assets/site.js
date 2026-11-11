@@ -53,6 +53,14 @@
    durationWrap.className='field';
    durationWrap.innerHTML='<label for="preferredDuration">Preferred duration *</label><select id="preferredDuration" name="duration" required><option value="">Choose a duration</option><option value="50">50 minutes</option><option value="60">60 minutes</option><option value="80">80 minutes</option><option value="90">90 minutes</option><option value="other">Other / not sure</option></select>';
    serviceField?.closest('.field')?.after(durationWrap);
+   const customServices=['Beach Pilates','Villa Wellness Package','Special / Bespoke Wellness Request'];
+   const requested=new URLSearchParams(window.location.search).get('service');
+   if(customServices.includes(requested)&&serviceField){
+     serviceField.value=requested;
+     const preferredDuration=form.querySelector('[name="duration"]');
+     if(preferredDuration)preferredDuration.value='other';
+     if(formatField)formatField.value=requested==='Beach Pilates'?'Private beach or waterfront':'Private villa or residence';
+   }
    const summary=document.createElement('div');
    summary.className='bahamasBookingSummary';
    summary.setAttribute('role','status');
@@ -65,7 +73,10 @@
      const place=formatField?.value,guests=guestField?.value;
      summary.querySelector('[data-summary-service]').textContent=name;
      summary.querySelector('[data-summary-details]').textContent=[duration&&duration!=='other'?duration+' minutes':(duration==='other'?'Duration by arrangement':null),place,guests?guests+' guest(s)':null].filter(Boolean).join(' · ')||'Choose treatment, duration, setting and guest count.';
-     summary.querySelector('[data-summary-price]').textContent='Price: see live booking menu / confirm with concierge';
+     const custom=customServices.includes(name);
+     summary.querySelector('[data-summary-price]').textContent=custom?'Custom quote and availability to be confirmed':'Price: see live booking menu / confirm with concierge';
+     const priceLink=summary.querySelector('a[href*="setmore.com"]');
+     if(priceLink)priceLink.hidden=custom;
    }
    form.addEventListener('change',syncRequestSummary);
    form.addEventListener('input',syncRequestSummary);
@@ -76,10 +87,10 @@
      const val=(key)=>String(data.get(key)||'').trim();
      const service=val('service'),format=val('format'),guests=val('guests'),when=val('date'),time=val('time'),area=val('area');
      const lines=[
-       'Hello Tranquilitas, I would like to REQUEST a Bahamas massage appointment.',
+       'Hello Tranquilitas, I would like to REQUEST a Bahamas wellness appointment.',
        '',
        'Treatment: '+service,
-       'Duration: '+val('duration')+' minutes',
+       'Duration: '+(val('duration')==='other'?'To be confirmed':val('duration')+' minutes'),
        'Setting: '+format,
        'Guests: '+guests,
        'Listed total: see current Tranquilitas booking menu / quote required',

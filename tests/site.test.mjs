@@ -11,8 +11,8 @@ const walk=(dir)=>readdirSync(dir,{withFileTypes:true}).flatMap(x=>{
  return x.isFile()&&x.name==='index.html'?[p]:[];
 });
 const htmls=walk('.').map(x=>({path:x.replace(/^\.\//,''),html:read(x)}));
-test('all 19 routes build and preserve distinct canonicals',()=>{
- assert.equal(htmls.length,19);
+test('all 22 routes build and preserve distinct canonicals',()=>{
+ assert.equal(htmls.length,22);
  const canonical=new Set();
  for(const {path,html} of htmls){
   assert.equal((html.match(/<link rel="canonical"/g)||[]).length,1,path);
@@ -32,7 +32,7 @@ test('all 19 routes build and preserve distinct canonicals',()=>{
 test('sitemap is complete but does not promote the booking request',()=>{
  const s=read('sitemap.xml');
  assert.match(s,/<urlset/);
- assert.equal((s.match(/<loc>/g)||[]).length,18);
+ assert.equal((s.match(/<loc>/g)||[]).length,21);
  assert.ok(!s.includes('<loc>'+base+'/book/</loc>'));
  assert.match(read('book/index.html'),/<meta name="robots" content="noindex,follow"/);
 });
@@ -74,4 +74,13 @@ test('Tranquilitas is represented as the existing spa, not a duplicate GBP',()=>
  assert.match(home,/"name":"Tranquilitas Day Spa"/);
  assert.match(home,/"streetAddress":"#7 Fourth Terrace, Collins Avenue"/);
  assert.match(home,/not a separate business or Google listing/i);
+});
+
+test('additional wellness services have working enquiry options',()=>{
+ const a=read('index.html'),b=read('experiences/index.html'),c=read('book/index.html');
+ for(const [path,service] of [['beach-pilates-nassau','Beach Pilates'],['villa-wellness-packages-bahamas','Villa Wellness Package'],['bespoke-wellness-bahamas','Special / Bespoke Wellness Request']]){
+  assert.ok(a.includes(path));assert.ok(b.includes(path));assert.ok(c.includes(service));
+  assert.match(read(path+'/index.html'),/not an instant booking/i);
+ }
+ assert.match(read('assets/site.js'),/URLSearchParams/);
 });

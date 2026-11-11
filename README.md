@@ -9,8 +9,9 @@ This is a Tranquilitas-branded, Bahamas-specific information and booking hub, no
 Testing whether the established parent site adds search visibility to differentiated Bahamas content. Subdomains do not automatically inherit rankings.
 
 ## Included
-- 19 working routes (18 in the sitemap; the booking enquiry page intentionally noindex).
+- 22 working routes (21 in the sitemap; the booking enquiry page intentionally noindex).
 - In-spa, mobile, couples, beach, cruise, hotel/villa/yacht and local areas content; 3 original local guides.
+- Enquiry-only beach Pilates, villa wellness and bespoke experiences with real Tranquilitas photos.
 - Booking enquiry via WhatsApp or email with honest pending-confirmation messaging; no pretend payment or unconfigured API.
 - Real Tranquilitas photo references and lazy-loaded Tranquilitas Google reviews widget.
 - Distinct titles/descriptions/canonicals, JSON-LD for existing local spa, XML sitemap, robots, mobile menu and image viewer.
