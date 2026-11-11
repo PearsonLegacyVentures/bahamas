@@ -95,7 +95,7 @@ await run('Yacht charter wellness enquiry page works on desktop and mobile',asyn
  await mobile.goto(origin+'/yacht-massage-bahamas/',{waitUntil:'domcontentloaded'});
  assert.ok(await mobile.locator('#tqYachtRequest').isVisible());
  const width=await mobile.evaluate(()=>({scroll:document.documentElement.scrollWidth,inner:innerWidth}));
- assert.ok(width.scroll<=width.inner+8,'Yacht page mobile horizontal overflow');
+ assert.ok(width.scroll<=width.inner+8,'Yacht page mobile horizontal overflow: '+JSON.stringify(width));
  await mobile.screenshot({path:'artifacts/yacht-mobile.png',fullPage:true});
 });
 await browser.close();
