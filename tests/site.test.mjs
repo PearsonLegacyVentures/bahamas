@@ -86,3 +86,5 @@ test('additional wellness services have working enquiry options',()=>{
 });
 
 test('yacht charter wellness is available as a custom group enquiry',()=>{const page=read('yacht-massage-bahamas/index.html');assert.match(page,/tqYachtRequest/);assert.match(page,/captain/i);assert.match(page,/crew/i);assert.match(read('book/index.html'),/Yacht \/ Charter Group Wellness/);assert.match(read('index.html'),/yacht-massage-bahamas/)});
+
+test('Bahamas conversion content preserves service search intent and working yacht media',()=>{const home=read('index.html');const y=read('yacht-massage-bahamas/index.html');assert.match(home,/Massage in Nassau & The Bahamas/);assert.match(home,/data-tranquilitas-ambient/);assert.match(y,/Yacht Massage in The Bahamas/);assert.match(y,/yw-gallery-grid/);assert.ok(!y.includes('PearsonLegacyVentures/The Bahamas'));assert.match(y,/tqYachtRequest/);});
